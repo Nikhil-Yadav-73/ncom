@@ -1,103 +1,91 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import contentfulClient from '../ContentfulClient';
+import Product from '../components/Product';
 
-const HomeScreen = ({ navigation }) => {
-  return (
-    <View style={styles.container}>
-      <View style={styles.navbar}>
-        <Text style={styles.logo}>NCOM</Text>
-        <TouchableOpacity style={styles.optionsButton} onPress={() => alert('Options menu')}>
-          <Text style={styles.optionsText}>•••</Text>
-        </TouchableOpacity>
+const HomeScreen = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        console.log('Fetching Content Types...');
+        const contentTypes = await contentfulClient.getContentTypes();
+        console.log('Content Types:', contentTypes.items);
+
+        const response = await contentfulClient.getEntries({
+          content_type: 'pageProduct', // Replace with the correct content type ID
+        });
+        console.log('Contentful response:', response); // Debug: Log the full response
+
+        if (response.items.length > 0) {
+          // Map products with resolved fields and linked assets
+          const resolvedProducts = response.items.map((item) => {
+            const fields = item.fields;
+
+            // Resolve image URL if available
+            const imageAsset = response.includes?.Asset?.find(
+              (asset) => asset.sys.id === fields.image?.sys.id
+            );
+
+            return {
+              id: item.sys.id,
+              name: fields.name || 'No Name', // Adjust field name if needed
+              price: fields.price || 'N/A', // Adjust field name if needed
+              imageUrl: imageAsset?.fields?.file?.url || '', // Get image URL or fallback
+            };
+          });
+
+          setProducts(resolvedProducts); // Set the resolved products
+        } else {
+          console.warn('No products found for the given content type.');
+        }
+      } catch (error) {
+        console.error('Error fetching data from Contentful:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
+    );
+  }
 
-      <ScrollView contentContainerStyle={styles.categorySection}>
-        <Text style={styles.sectionTitle}>Shop by Category</Text>
-
-        <View style={styles.categoryRow}>
-          <TouchableOpacity
-            style={styles.categoryCard}
-            onPress={() => navigation.navigate('Category', { category: 'Mens' })}
-          >
-            <Text style={styles.categoryText}>Men's</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryCard}
-            onPress={() => navigation.navigate('Category', { category: 'Womens' })}
-          >
-            <Text style={styles.categoryText}>Women's</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.categoryRow}>
-          <TouchableOpacity
-            style={styles.categoryCard}
-            onPress={() => navigation.navigate('Category', { category: 'Kids' })}
-          >
-            <Text style={styles.categoryText}>Kids</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.categoryCard}
-            onPress={() => navigation.navigate('Category', { category: 'Accessories' })}
-          >
-            <Text style={styles.categoryText}>Accessories</Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
-    </View>
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.sectionTitle}>Featured Products</Text>
+      {products.length > 0 ? (
+        products.map((product) => (
+          <Product key={product.id} product={product} />
+        ))
+      ) : (
+        <Text>No products found</Text>
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  navbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15,
-    backgroundColor: '#333',
-    alignItems: 'center',
-  },
-  logo: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  optionsButton: {
-    padding: 10,
-    backgroundColor: '#444',
-    borderRadius: 5,
-  },
-  optionsText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  categorySection: {
-    padding: 15,
+    padding: 20,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  categoryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginBottom: 15,
   },
-  categoryCard: {
-    backgroundColor: '#f8f8f8',
-    width: '48%',
-    padding: 20,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 10,
-    elevation: 3,
-  },
-  categoryText: {
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
