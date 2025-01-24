@@ -67,7 +67,7 @@ const HomeScreen = ({ navigation }) => {
     <TouchableOpacity
       style={styles.dropdownItem}
       onPress={() => {
-        setDropdownVisible(false); // Close dropdown after selection
+        setDropdownVisible(false);
         item.action();
       }}
     >
@@ -85,22 +85,20 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Navbar */}
       <View style={styles.navbar}>
         <Text style={styles.logo}>NCOM</Text>
         <TouchableOpacity
           style={styles.optionsButton}
-          onPress={() => setDropdownVisible(!isDropdownVisible)} // Toggle dropdown
+          onPress={() => setDropdownVisible(!isDropdownVisible)}
         >
           <Text style={styles.optionsText}>•••</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Dropdown Menu */}
       <Modal
         isVisible={isDropdownVisible}
         backdropOpacity={0.1}
-        onBackdropPress={() => setDropdownVisible(false)} // Close on clicking outside
+        onBackdropPress={() => setDropdownVisible(false)}
         style={styles.dropdownModal}
       >
         <View style={styles.dropdownMenu}>
@@ -112,7 +110,6 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </Modal>
 
-      {/* Content */}
       <ScrollView contentContainerStyle={styles.categorySection}>
         <Text style={styles.sectionTitle}>Shop by Category</Text>
 

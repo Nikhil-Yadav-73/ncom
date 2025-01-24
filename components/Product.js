@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 
 const Product = ({ product }) => {
+  console.log(product);
   return (
     <View style={styles.productCard}>
       <Image
-        source={{ uri: `https:${product.imageUrl}` }} // Prefix with `https:`
+        source={{ uri: `https:${product.imageUrl}` }}
         style={styles.productImage}
       />
       <Text style={styles.productName}>{product.name}</Text>
