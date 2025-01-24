@@ -123,6 +123,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  navbar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 15,
+    backgroundColor: '#333',
+    alignItems: 'center',
+  },
   logo: {
     color: '#ffa',
     fontSize: 24,
