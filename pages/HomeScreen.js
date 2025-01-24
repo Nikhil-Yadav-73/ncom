@@ -12,6 +12,7 @@ import Modal from 'react-native-modal';
 import contentfulClient from '../ContentfulClient';
 import Product from '../components/Product';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import NavComponent from "../components/NavComponent"
 
 const content_types = ['pageLanding', 'pageProduct'];
 
@@ -99,23 +100,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.navbar}>
-      <View style={styles.iconsContainer}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => console.log('Cart pressed')}
-        >
-          <Icon name="cart" size={24} color="black" />
-        </TouchableOpacity>
-      </View>
-      <Text style={styles.logo}>NCOM</Text>
-      <TouchableOpacity
-        style={styles.iconButton}
-        onPress={() => setDropdownVisible(!isDropdownVisible)}
-      >
-        <Text style={styles.optionsText}>•••</Text>
-      </TouchableOpacity>
-    </View>
+    <NavComponent />
 
       <Modal
         isVisible={isDropdownVisible}
@@ -202,10 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 5,
   },
-  optionsText: {
-    color: '#fff',
-    fontSize: 18,
-  },
+ 
   dropdownModal: {
     justifyContent: 'flex-start',
     margin: 0,
