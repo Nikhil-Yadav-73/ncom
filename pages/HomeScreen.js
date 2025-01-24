@@ -50,7 +50,8 @@ const HomeScreen = ({ navigation }) => {
               id: counter,
               name: response.items[counter].fields.internalName,
               price: response.items[counter].fields.price,
-              imageUrl: response.items[counter].fields.featuredProductImage.fields.file.url
+              imageUrl: response.items[counter].fields.featuredProductImage.fields.file.url,
+              description: response.items[counter].fields.description
             };
             counter++;
           }
