@@ -11,6 +11,7 @@ import {
 import Modal from 'react-native-modal';
 import contentfulClient from '../ContentfulClient';
 import Product from '../components/Product';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const content_types = ['pageLanding', 'pageProduct'];
 
@@ -99,14 +100,22 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.navbar}>
-        <Text style={styles.logo}>NCOM</Text>
+      <View style={styles.iconsContainer}>
         <TouchableOpacity
-          style={styles.optionsButton}
-          onPress={() => setDropdownVisible(!isDropdownVisible)}
+          style={styles.iconButton}
+          onPress={() => console.log('Cart pressed')}
         >
-          <Text style={styles.optionsText}>•••</Text>
+          <Icon name="cart" size={24} color="black" />
         </TouchableOpacity>
       </View>
+      <Text style={styles.logo}>NCOM</Text>
+      <TouchableOpacity
+        style={styles.iconButton}
+        onPress={() => setDropdownVisible(!isDropdownVisible)}
+      >
+        <Text style={styles.optionsText}>•••</Text>
+      </TouchableOpacity>
+    </View>
 
       <Modal
         isVisible={isDropdownVisible}
@@ -172,21 +181,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  iconsContainer: {
+    marginRight: 0,
+    color: '#ffa'
+  },
   navbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
-    backgroundColor: '#333',
+    backgroundColor: '#87CEEB',
     alignItems: 'center',
   },
   logo: {
-    color: '#ffa',
+    color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
   },
   optionsButton: {
     padding: 10,
-    backgroundColor: '#444',
+    backgroundColor: '#fff',
     borderRadius: 5,
   },
   optionsText: {
