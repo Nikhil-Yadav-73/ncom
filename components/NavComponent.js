@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Voice from '@react-native-voice/voice';
 
-const NavbarWithSearch = ({products}) => {
+const NavComponent = ({ products }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [isListening, setIsListening] = useState(false); 
+  const [isListening, setIsListening] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
   useEffect(() => {
     const checkVoiceAvailability = async () => {
@@ -26,6 +27,20 @@ const NavbarWithSearch = ({products}) => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
   }, []);
+
+  useEffect(() => {
+    if (searchText.trim() === '') {
+      setFilteredProducts([]);
+    } else {
+      const lowerCaseSearch = searchText.toLowerCase();
+      const filtered = products.filter(
+        (product) =>
+          product.name.toLowerCase().includes(lowerCaseSearch) ||
+          product.description.toLowerCase().includes(lowerCaseSearch)
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [searchText, products]);
 
   const onSpeechStart = () => {
     setIsListening(true);
@@ -57,6 +72,13 @@ const NavbarWithSearch = ({products}) => {
       console.error('Voice stop error:', e);
     }
   };
+
+  const renderProduct = ({ item }) => (
+    <View style={styles.productItem}>
+      <Text style={styles.productName}>{item.name}</Text>
+      <Text style={styles.productDescription}>{item.description}</Text>
+    </View>
+  );
 
   return (
     <View>
@@ -92,6 +114,14 @@ const NavbarWithSearch = ({products}) => {
           <Icon name={isListening ? 'microphone-off' : 'microphone'} size={24} color="black" />
         </TouchableOpacity>
       </View>
+
+      {searchText.trim() !== '' && (
+        <FlatList
+          data={filteredProducts}
+          renderItem={renderProduct}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -137,6 +167,19 @@ const styles = StyleSheet.create({
   micButton: {
     marginLeft: 8,
   },
+  productItem: {
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  productName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  productDescription: {
+    fontSize: 14,
+    color: '#555',
+  },
 });
 
-export default NavbarWithSearch;
+export default NavComponent;
