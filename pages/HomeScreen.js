@@ -102,7 +102,6 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.sectionTitle}>Featured Products</Text>
-          <Text style={styles.sectionTitle}>Featured Products</Text>
           {products.length > 0 ? (
             products.map((product) => (
               <Product key={product.id} product={product} />
