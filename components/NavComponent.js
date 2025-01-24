@@ -3,10 +3,10 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Voice from '@react-native-voice/voice';
 
-const NavbarWithSearch = () => {
+const NavbarWithSearch = ({products}) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [searchText, setSearchText] = useState('');
-  const [isListening, setIsListening] = useState(false);
+  const [isListening, setIsListening] = useState(false); 
 
   useEffect(() => {
     const checkVoiceAvailability = async () => {
@@ -78,7 +78,6 @@ const NavbarWithSearch = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Search Bar */}
       <View style={styles.searchBarContainer}>
         <TextInput
           style={styles.searchInput}

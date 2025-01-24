@@ -100,7 +100,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-    <NavComponent />
+    <NavComponent products={products}  />
 
       <Modal
         isVisible={isDropdownVisible}
@@ -166,28 +166,32 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  iconsContainer: {
-    marginRight: 0,
-    color: '#ffa'
+  categorySection: {
+    padding: 15,
+    paddingTop: 20, // Add padding to prevent overlap with Navbar
   },
-  navbar: {
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  categoryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
-    backgroundColor: '#87CEEB',
-    alignItems: 'center',
+    marginBottom: 15,
   },
-  logo: {
-    color: '#fff',
-    fontSize: 24,
+  categoryCard: {
+    backgroundColor: '#f8f8f8',
+    width: '48%',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 3,
+  },
+  categoryText: {
+    fontSize: 16,
     fontWeight: 'bold',
   },
-  optionsButton: {
-    padding: 10,
-    backgroundColor: '#fff',
-    borderRadius: 5,
-  },
- 
   dropdownModal: {
     justifyContent: 'flex-start',
     margin: 0,
@@ -207,31 +211,6 @@ const styles = StyleSheet.create({
   dropdownText: {
     fontSize: 16,
     color: '#333',
-  },
-  categorySection: {
-    padding: 15,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 15,
-  },
-  categoryText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  categoryRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-  },
-  categoryCard: {
-    backgroundColor: '#f8f8f8',
-    width: '48%',
-    padding: 20,
-    alignItems: 'center',
-    borderRadius: 10,
-    elevation: 3,
   },
   loadingContainer: {
     flex: 1,
