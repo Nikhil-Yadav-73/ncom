@@ -18,6 +18,7 @@ const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isDropdownVisible, setDropdownVisible] = useState(false);
+  let counter = 0;
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -25,21 +26,20 @@ const HomeScreen = ({ navigation }) => {
         const response = await contentfulClient.getEntries({
           content_type: content_types[1],
         });
-        console.log('Contentful response:', response);
+        console.log('shareimages:', response.includes.Entry[0].fields.shareImages[0].fields.file.url);
 
         if (response.items.length > 0) {
           const resolvedProducts = response.items.map((item) => {
             const fields = item.fields;
 
-            const imageAsset = response.includes?.Asset?.find(
-              (asset) => asset.sys.id === fields.image?.sys.id
-            );
+            const imageUrl =
+              response.includes.Entry[counter++].fields?.shareImages[0].fields?.file?.url || '';
 
             return {
               id: item.sys.id,
               name: fields.name || 'No Name',
               price: fields.price || 'N/A',
-              imageUrl: imageAsset?.fields?.file?.url || '',
+              imageUrl: imageUrl || '',
             };
           });
 
@@ -156,7 +156,6 @@ const HomeScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
     flex: 1,
     backgroundColor: '#fff',
   },
