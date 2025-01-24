@@ -6,14 +6,7 @@ import HomeScreen from './pages/HomeScreen';
 import CategoryPage from './pages/CategoryPage';
 import { StyleSheet, Text, View } from 'react-native';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
 
 
 const Stack = createStackNavigator();

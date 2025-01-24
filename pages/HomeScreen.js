@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
 import contentfulClient from '../ContentfulClient';
 import Product from '../components/Product';
 
-const HomeScreen = () => {
+content_types = ['pageLanding', 'pageProduct']
+
+const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -15,29 +17,27 @@ const HomeScreen = () => {
         console.log('Content Types:', contentTypes.items);
 
         const response = await contentfulClient.getEntries({
-          content_type: 'pageProduct', // Replace with the correct content type ID
+          content_type: content_types[1],
         });
-        console.log('Contentful response:', response); // Debug: Log the full response
+        console.log('Contentful response:', response);
 
         if (response.items.length > 0) {
-          // Map products with resolved fields and linked assets
           const resolvedProducts = response.items.map((item) => {
             const fields = item.fields;
 
-            // Resolve image URL if available
             const imageAsset = response.includes?.Asset?.find(
               (asset) => asset.sys.id === fields.image?.sys.id
             );
 
             return {
               id: item.sys.id,
-              name: fields.name || 'No Name', // Adjust field name if needed
-              price: fields.price || 'N/A', // Adjust field name if needed
-              imageUrl: imageAsset?.fields?.file?.url || '', // Get image URL or fallback
+              name: fields.name || 'No Name',
+              price: fields.price || 'N/A',
+              imageUrl: imageAsset?.fields?.file?.url || '',
             };
           });
 
-          setProducts(resolvedProducts); // Set the resolved products
+          setProducts(resolvedProducts);
         } else {
           console.warn('No products found for the given content type.');
         }
@@ -60,27 +60,94 @@ const HomeScreen = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.sectionTitle}>Featured Products</Text>
-      {products.length > 0 ? (
-        products.map((product) => (
-          <Product key={product.id} product={product} />
-        ))
-      ) : (
-        <Text>No products found</Text>
-      )}
-    </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.navbar}>
+        <Text style={styles.logo}>NCOM</Text>
+        <TouchableOpacity style={styles.optionsButton} onPress={() => alert('Options menu')}>
+          <Text style={styles.optionsText}>•••</Text>
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.categorySection}>
+        <Text style={styles.sectionTitle}>Shop by Category</Text>
+
+        <View style={styles.categoryRow}>
+          <TouchableOpacity
+            style={styles.categoryCard}
+            onPress={() => navigation.navigate('Category', { category: 'Mens' })}
+          >
+            <Text style={styles.categoryText}>Men's</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.categoryCard}
+            onPress={() => navigation.navigate('Category', { category: 'Womens' })}
+          >
+            <Text style={styles.categoryText}>Women's</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.categoryRow}>
+          <TouchableOpacity
+            style={styles.categoryCard}
+            onPress={() => navigation.navigate('Category', { category: 'Kids' })}
+          >
+            <Text style={styles.categoryText}>Kids</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.categoryCard}
+            onPress={() => navigation.navigate('Category', { category: 'Accessories' })}
+          >
+            <Text style={styles.categoryText}>Accessories</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Text style={styles.sectionTitle}>Featured Products</Text>
+          <Text style={styles.sectionTitle}>Featured Products</Text>
+          {products.length > 0 ? (
+            products.map((product) => (
+              <Product key={product.id} product={product} />
+            ))
+          ) : (
+            <Text>No products found</Text>
+          )}
+        
+      </ScrollView>
+    </View>
+    
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 5,
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  logo: {
+    color: '#ffa',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  optionsButton: {
+    padding: 10,
+    backgroundColor: '#444',
+    borderRadius: 5,
+  },
+  optionsText: {
+    color: '#fff',
+    fontSize: 18,
+  },
+  categorySection: {
+    padding: 15,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 15,
+  },
+  categoryText: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   loadingContainer: {
     flex: 1,
