@@ -26,22 +26,34 @@ const HomeScreen = ({ navigation }) => {
         const response = await contentfulClient.getEntries({
           content_type: content_types[1],
         });
-        console.log('shareimages:', response.includes.Entry[0].fields.shareImages[0].fields.file.url);
+        console.log('response:', response.includes.Entry[counter]);
 
-        if (response.items.length > 0) {
-          const resolvedProducts = response.items.map((item) => {
-            const fields = item.fields;
+        if (response.includes.Entry.length > 0) {
+          // const resolvedProducts = response.includes.Entry.map((item) => {
+          //   let fields = item.Entry[counter].fields;
 
-            const imageUrl =
-              response.includes.Entry[counter++].fields?.shareImages[0].fields?.file?.url || '';
+          //   const imageUrl =
+          //     response.includes.Entry[counter++].fields?.shareImages[1].fields?.file?.url || '';
 
-            return {
-              id: item.sys.id,
-              name: fields.name || 'No Name',
-              price: fields.price || 'N/A',
-              imageUrl: imageUrl || '',
+          //   return {
+          //     id: item.sys.id,
+          //     name: fields.name || 'No Name',
+          //     price: fields.price || 'N/A',
+          //     imageUrl: imageUrl || '',
+          //   };
+          // });
+
+          let resolvedProducts = [];
+
+          while(counter < response.includes.Entry.length){
+            resolvedProducts[counter] = {
+              id: counter,
+              name: response.includes.Entry[counter].fields.pageTitle,
+              imageUrl: response.includes.Entry[counter].fields.shareImages[0].fields.file.url
             };
-          });
+            console.log(response.includes.Entry[counter].fields);
+            counter = counter + 1;
+          }
 
           setProducts(resolvedProducts);
         } else {
