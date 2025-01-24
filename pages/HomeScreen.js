@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, ActivityIndicator } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  ScrollView, 
+  StyleSheet, 
+  ActivityIndicator, 
+  FlatList 
+} from 'react-native';
+import Modal from 'react-native-modal';
 import contentfulClient from '../ContentfulClient';
 import Product from '../components/Product';
 
-content_types = ['pageLanding', 'pageProduct']
+const content_types = ['pageLanding', 'pageProduct'];
 
 const HomeScreen = ({ navigation }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDropdownVisible, setDropdownVisible] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        console.log('Fetching Content Types...');
-        const contentTypes = await contentfulClient.getContentTypes();
-        console.log('Content Types:', contentTypes.items);
-
         const response = await contentfulClient.getEntries({
           content_type: content_types[1],
         });
@@ -51,6 +57,24 @@ const HomeScreen = ({ navigation }) => {
     fetchProducts();
   }, []);
 
+  const menuOptions = [
+    { id: '1', label: 'Profile', action: () => alert('Profile Clicked') },
+    { id: '2', label: 'Settings', action: () => alert('Settings Clicked') },
+    { id: '3', label: 'Logout', action: () => alert('Logout Clicked') },
+  ];
+
+  const renderDropdownItem = ({ item }) => (
+    <TouchableOpacity
+      style={styles.dropdownItem}
+      onPress={() => {
+        setDropdownVisible(false); // Close dropdown after selection
+        item.action();
+      }}
+    >
+      <Text style={styles.dropdownText}>{item.label}</Text>
+    </TouchableOpacity>
+  );
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -61,13 +85,34 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      {/* Navbar */}
       <View style={styles.navbar}>
         <Text style={styles.logo}>NCOM</Text>
-        <TouchableOpacity style={styles.optionsButton} onPress={() => alert('Options menu')}>
+        <TouchableOpacity
+          style={styles.optionsButton}
+          onPress={() => setDropdownVisible(!isDropdownVisible)} // Toggle dropdown
+        >
           <Text style={styles.optionsText}>•••</Text>
         </TouchableOpacity>
       </View>
 
+      {/* Dropdown Menu */}
+      <Modal
+        isVisible={isDropdownVisible}
+        backdropOpacity={0.1}
+        onBackdropPress={() => setDropdownVisible(false)} // Close on clicking outside
+        style={styles.dropdownModal}
+      >
+        <View style={styles.dropdownMenu}>
+          <FlatList
+            data={menuOptions}
+            keyExtractor={(item) => item.id}
+            renderItem={renderDropdownItem}
+          />
+        </View>
+      </Modal>
+
+      {/* Content */}
       <ScrollView contentContainerStyle={styles.categorySection}>
         <Text style={styles.sectionTitle}>Shop by Category</Text>
 
@@ -102,17 +147,13 @@ const HomeScreen = ({ navigation }) => {
         </View>
 
         <Text style={styles.sectionTitle}>Featured Products</Text>
-          {products.length > 0 ? (
-            products.map((product) => (
-              <Product key={product.id} product={product} />
-            ))
-          ) : (
-            <Text>No products found</Text>
-          )}
-        
+        {products.length > 0 ? (
+          products.map((product) => <Product key={product.id} product={product} />)
+        ) : (
+          <Text>No products found</Text>
+        )}
       </ScrollView>
     </View>
-    
   );
 };
 
@@ -142,6 +183,26 @@ const styles = StyleSheet.create({
   optionsText: {
     color: '#fff',
     fontSize: 18,
+  },
+  dropdownModal: {
+    justifyContent: 'flex-start',
+    margin: 0,
+    marginTop: 70,
+  },
+  dropdownMenu: {
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 5,
+    elevation: 5,
+  },
+  dropdownItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#333',
   },
   categorySection: {
     padding: 15,
