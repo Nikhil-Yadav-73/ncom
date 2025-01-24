@@ -26,9 +26,9 @@ const HomeScreen = ({ navigation }) => {
         const response = await contentfulClient.getEntries({
           content_type: content_types[1],
         });
-        console.log('response:', response.includes.Entry[counter]);
+        // console.log('response:', response.includes.Entry[counter]);
 
-        if (response.includes.Entry.length > 0) {
+        if (response.items.length > 0) {
           // const resolvedProducts = response.includes.Entry.map((item) => {
           //   let fields = item.Entry[counter].fields;
 
@@ -45,14 +45,14 @@ const HomeScreen = ({ navigation }) => {
 
           let resolvedProducts = [];
 
-          while(counter < response.includes.Entry.length){
+          while(counter < response.items.length){
             resolvedProducts[counter] = {
               id: counter,
-              name: response.includes.Entry[counter].fields.pageTitle,
-              imageUrl: response.includes.Entry[counter].fields.shareImages[0].fields.file.url
+              name: response.items[counter].fields.internalName,
+              price: response.items[counter].fields.price,
+              imageUrl: response.items[counter].fields.featuredProductImage.fields.file.url
             };
-            console.log(response.includes.Entry[counter].fields);
-            counter = counter + 1;
+            counter++;
           }
 
           setProducts(resolvedProducts);
