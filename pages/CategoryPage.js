@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const CategoryPage = ({ route }) => {
-  // Get the category name passed via navigation
   const { category } = route.params;
 
   return (

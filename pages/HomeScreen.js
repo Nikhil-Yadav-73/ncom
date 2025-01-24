@@ -4,7 +4,6 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-nati
 const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
-      {/* Navbar */}
       <View style={styles.navbar}>
         <Text style={styles.logo}>NCOM</Text>
         <TouchableOpacity style={styles.optionsButton} onPress={() => alert('Options menu')}>
@@ -12,7 +11,6 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      {/* Categories Section */}
       <ScrollView contentContainerStyle={styles.categorySection}>
         <Text style={styles.sectionTitle}>Shop by Category</Text>
 
@@ -50,7 +48,6 @@ const HomeScreen = ({ navigation }) => {
   );
 };
 
-// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
