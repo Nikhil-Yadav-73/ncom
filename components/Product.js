@@ -1,17 +1,23 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const Product = ({ product }) => {
-  
+  const navigation = useNavigation();
+
   return (
-    <View style={styles.productCard}>
-      <Image
-        source={{ uri: `https:${product.imageUrl}` }}
-        style={styles.productImage}
-      />
-      <Text style={styles.productName}>{product.name}</Text>
-      <Text style={styles.productPrice}>₹{product.price}</Text>
-    </View>
+    <TouchableOpacity
+      onPress={() => navigation.navigate('ProductDescription', { product })}
+    >
+      <View style={styles.productCard}>
+        <Image
+          source={{ uri: `https:${product.imageUrl}` }}
+          style={styles.productImage}
+        />
+        <Text style={styles.productName}>{product.name}</Text>
+        <Text style={styles.productPrice}>₹{product.price}</Text>
+      </View>
+    </TouchableOpacity>
   );
 };
 
