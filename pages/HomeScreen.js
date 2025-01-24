@@ -149,6 +149,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  categoryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  categoryCard: {
+    backgroundColor: '#f8f8f8',
+    width: '48%',
+    padding: 20,
+    alignItems: 'center',
+    borderRadius: 10,
+    elevation: 3,
+  },
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
