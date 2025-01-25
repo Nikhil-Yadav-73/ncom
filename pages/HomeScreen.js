@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   categorySection: {
     padding: 15,
-    paddingTop: 20, // Add padding to prevent overlap with Navbar
+    paddingTop: 20,
   },
   sectionTitle: {
     fontSize: 18,
